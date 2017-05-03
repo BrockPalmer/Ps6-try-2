@@ -14,9 +14,7 @@ import org.junit.Test;
 
 import domain.PersonDomainModel;
 
-public class Person_Test {
-	//Jnuiting testing seems to not work because of the hibernate not working well
-	//Trying to create this is basically guessing because everytime I run it, it gets stopped
+public class Person_Test2 {
 	
 	
 	
@@ -51,6 +49,8 @@ public class Person_Test {
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+	PersonDAL.deletePerson(per1.getPersonID());
+
 	}
 
 	@Test
@@ -58,8 +58,8 @@ public class Person_Test {
 		//Adds person
 		PersonDAL.addPerson(per1);
 		// Test sees if the UUID is there
-		PersonDomainModel test = PersonDAL.getPerson(per1.getPersonID());
-		assertNotNull(test);
+		
+		assertTrue(PersonDAL.getPersons().size()==1);
 	}
 	@Test
 	public void getPersonstest() {
@@ -72,7 +72,8 @@ public class Person_Test {
 			//Would work if you get a size of more than one person
 			assertEquals(1,1);
 		}
-	
+		PersonDAL.deletePerson(per2.getPersonID());
+
 	}
 	@Test
 	public void getPersontest() {
