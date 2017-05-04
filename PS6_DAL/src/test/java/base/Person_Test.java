@@ -14,31 +14,21 @@ import org.junit.Test;
 
 import domain.PersonDomainModel;
 
-public class Person_Test2 {
-	
-	
-	
-	
+public class Person_Test {
+
 	private static PersonDomainModel per1;
-	
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		per1= new PersonDomainModel();
+	per1= new PersonDomainModel();
 		
-		Date date1 = null;
-		try {
-			date1 = new SimpleDateFormat("yyyy-MM-dd").parse("1998-08-10");
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
 	//should set attributes but seems to not work. 
 	//Improper hibernate or something wrong with getters and setter given?
 	per1.setPersonID(UUID.randomUUID());
 	
 	per1.setFirstName("Brock");
 	
-
+	per1.setBirthday(null);
 	per1.setLastName("Palmer");
 	per1.setCity("Ellicott");
 	per1.setPostalCode(21042);
@@ -56,10 +46,11 @@ public class Person_Test2 {
 	@Test
 	public void addPersontest() {
 		//Adds person
+		int X =PersonDAL.getPersons().size();
 		PersonDAL.addPerson(per1);
 		// Test sees if the UUID is there
 		
-		assertTrue(PersonDAL.getPersons().size()==1);
+		assertTrue(PersonDAL.getPersons().size()==(X+1));
 	}
 	@Test
 	public void getPersonstest() {
@@ -104,10 +95,8 @@ public class Person_Test2 {
 		PersonDAL.addPerson(per1);
 		PersonDomainModel per = PersonDAL.getPerson(per1.getPersonID());
 		assertNotNull(per);
-		
 		PersonDAL.deletePerson(per1.getPersonID());
 		per = PersonDAL.getPerson(per1.getPersonID());
 		assertNull(per);
 	}
-
 }

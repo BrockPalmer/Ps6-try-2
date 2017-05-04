@@ -65,17 +65,20 @@ public class PersonDAL {
 	public static PersonDomainModel getPerson(UUID perID) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
-		PersonDomainModel perGet = null;		
-		
+		PersonDomainModel perGet = null;
+
 		try {
-			tx = session.beginTransaction();	
-									
-			Query query = session.createQuery("from PersonDomainModel where personId = :id ");
-			query.setParameter("id", perID.toString());
-			
+			tx = session.beginTransaction();
+
+			Query query = session.createQuery("from PersonDomainModel where PersonId = :id ");
+			query.setParameter("id", perID);
+
 			List<?> list = query.list();
-			perGet = (PersonDomainModel)list.get(0);
-			
+			if ((list != null) && (list.size() == 1)) {
+				perGet = (PersonDomainModel) list.get(0);
+			} else
+				return null;
+
 			tx.commit();
 		} catch (HibernateException e) {
 			if (tx != null)
@@ -85,20 +88,19 @@ public class PersonDAL {
 			session.close();
 		}
 		return perGet;
-	}		
-
+	}
 	public static void deletePerson(UUID perID) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
-		PersonDomainModel perGet = null;		
-		
+		PersonDomainModel perGet = null;
+
 		try {
-			tx = session.beginTransaction();	
-									
+			tx = session.beginTransaction();
+
 			PersonDomainModel per = (PersonDomainModel) session.get(PersonDomainModel.class, perID);
-			session.delete(per);
-		
-			
+			if (per != null)
+				session.delete(per);
+
 			tx.commit();
 		} catch (HibernateException e) {
 			if (tx != null)
@@ -107,8 +109,7 @@ public class PersonDAL {
 		} finally {
 			session.close();
 		}
-
-	}	
+	}
 	
 
 	public static PersonDomainModel updatePerson(PersonDomainModel per) {
